@@ -1,0 +1,51 @@
+﻿@model IdentityClaim.Models.PermissionViewModel
+@{
+    ViewBag.Title = "Permissions";
+}
+<form action="/Home/Permissions" method="post">
+
+    <fieldset>
+        <legend> Users</legend>
+        @Html.DropDownList("UserId", (SelectList)ViewData["UserId"], " -- Select User -- ", new
+   {
+       @class = "form-control",
+       id = "UserId",
+   })
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Permissions
+        </legend>
+        @foreach (var controller in Model.Dic)
+            {
+            <ul class="col-xs-3">
+                <li><h4><b>@controller.Key</b></h4></li>
+                @foreach (var action in controller.Value)
+                {
+                    if (action.Allow)
+                    {
+                        <li><input type="checkbox" name="Values" value="@controller.Key.@action.Permission" checked  /><span class="@action.Type"> @action.Permission @action.Type  </span></li>
+                    }
+
+                    else
+                    {
+                        <li><input type="checkbox" name="Values" value="@controller.Key.@action.Permission"  /><span class="@action.Type"> @action.Permission @action.Type  </span>  </li>
+                    }
+                }
+            </ul>
+        }
+    </fieldset>
+
+    <div class="col-xs-12">
+        <br />
+        <input type="submit" name="name" value="Save" />
+    </div>
+</form>
+@section scripts{
+    <script>
+        $('#UserId').change(function () {
+            document.location.href = "/Home/Permissions?userId=" + $(this).val();
+        })
+    </script>
+}
